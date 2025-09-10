@@ -32,7 +32,17 @@ export function YachtTypesSection() {
   ];
 
   const redirectToAboutUs = () => {
-    navigate('/servicios'); // Usar navigate para la redirección
+    navigate('/servicios');
+  };
+
+  // Función para redirigir a WhatsApp con mensaje específico del servicio
+  const redirectToWhatsApp = (serviceName) => {
+    const phoneNumber = "573205651098"; // Reemplaza con tu número de WhatsApp
+    const message = `Hola, me gustaría obtener más información sobre el servicio de ${serviceName}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    window.open(whatsappURL, '_blank');
   };
 
   return (
@@ -53,7 +63,7 @@ export function YachtTypesSection() {
           <Button 
             size="lg"
             className="bg-ocean-deep hover:bg-ocean-medium text-white px-8 py-4 h-auto font-semibold hidden lg:flex"
-              onClick={redirectToAboutUs}
+            onClick={redirectToAboutUs}
           >
             {t('yachtTypes.seeMore')}
           </Button>
@@ -84,8 +94,9 @@ export function YachtTypesSection() {
                     size="sm"
                     variant="ghost"
                     className="text-white hover:bg-white/20 p-2 h-auto"
+                    onClick={() => redirectToWhatsApp(yacht.title)}
                   >
-                    <ArrowRight className="w-5 h-5" />
+                    {t('service.info')} <ArrowRight className="w-5 h-5" />
                   </Button>
                 </div>
               </div>
@@ -97,7 +108,7 @@ export function YachtTypesSection() {
           <Button 
             size="lg"
             className="bg-ocean-deep hover:bg-ocean-medium text-white px-8 py-4 h-auto font-semibold"
-            
+            onClick={redirectToAboutUs}
           >
             {t('yachtTypes.seeMore')}
           </Button>
