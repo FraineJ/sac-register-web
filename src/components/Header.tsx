@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import logo from "@/assets/logo-sac.png";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,14 @@ export function Header() {
   return (
     <header className="absolute top-0 left-0 right-0 z-50 px-4 py-6 lg:px-8">
       <nav className="flex items-center justify-between">
-        <div className="text-white text-2xl font-bold tracking-wide">
-          SAC REGISTER
+        <div className="flex items-center">
+          <a href="/">
+            <img
+              src={logo} // Ruta a tu imagen de logo
+              alt="SAC REGISTER"
+              className="h-20 w-auto md:h-20" // Altura responsive
+            />
+          </a>
         </div>
         
         {/* Desktop Navigation */}

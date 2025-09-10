@@ -5,9 +5,42 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
+import { toast } from "@/hooks/use-toast";
 
 const Contact = () => {
   const { t } = useLanguage();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    service: "",
+    message: ""
+  });
+
+    const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: t('contactForm.messageSent'),
+      description: t('contactForm.messageDescription'),
+    });
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      service: "",
+      message: ""
+    });
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -31,132 +64,90 @@ const Contact = () => {
               <CardHeader>
                 <CardTitle className="text-2xl flex items-center gap-2">
                   <Calendar className="w-6 h-6 text-primary" />
-                  {t('contactPage.scheduleTitle')}
+                  {t('contactForm.requestConsult')}
                 </CardTitle>
                 <CardDescription>
-                  {t('contactPage.scheduleDescription')}
+                  {t('contactForm.formDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-1">
-                <form className="space-y-2">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">{t('contactPage.firstName')}</Label>
+                      <Label htmlFor="name">{t('contactForm.fullName')}</Label>
                       <Input
-                        id="firstName"
-                        placeholder={t('contactPage.firstNamePlaceholder')}
-                        className="border-border focus:border-primary"
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => handleChange("name", e.target.value)}
+                        placeholder={t('contactForm.namePlaceholder')}
+                        required
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">{t('contactPage.lastName')}</Label>
-                      <Input
-                        id="lastName"
-                        placeholder={t('contactPage.lastNamePlaceholder')}
-                        className="border-border focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-
                     <div className="space-y-2">
                       <Label htmlFor="email">{t('contact.email')}</Label>
                       <Input
                         id="email"
                         type="email"
-                        placeholder={t('contactPage.emailPlaceholder')}
-                        className="border-border focus:border-primary"
+                        value={formData.email}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        placeholder={t('contactForm.emailPlaceholder')}
+                        required
                       />
                     </div>
+                  </div>
 
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="phone">{t('contact.phone')}</Label>
                       <Input
                         id="phone"
-                        type="tel"
-                        placeholder={t('contactPage.phonePlaceholder')}
-                        className="border-border focus:border-primary"
+                        value={formData.phone}
+                        onChange={(e) => handleChange("phone", e.target.value)}
+                        placeholder={t('contactForm.phonePlaceholder')}
+                        required
                       />
                     </div>
-
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-
                     <div className="space-y-2">
                       <Label htmlFor="company">{t('contact.company')}</Label>
                       <Input
                         id="company"
-                        placeholder={t('contactPage.companyPlaceholder')}
-                        className="border-border focus:border-primary"
+                        value={formData.company}
+                        onChange={(e) => handleChange("company", e.target.value)}
+                        placeholder={t('contactForm.companyPlaceholder')}
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="service">{t('contactPage.serviceInterest')}</Label>
-                      <select
-                        id="service"
-                        className="w-full px-3 py-2 rounded-md border border-border bg-background focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                      >
-                        <option value="">{t('contactPage.selectService')}</option>
-                        <option value="clasificacion">{t('contactPage.services.classification')}</option>
-                        <option value="auditorias">{t('contactPage.services.audits')}</option>
-                        <option value="cursos-omi">{t('contactPage.services.omi')}</option>
-                        <option value="certificaciones">{t('contactPage.services.certifications')}</option>
-                        <option value="ingenieria-naval">{t('contactPage.services.engineering')}</option>
-                        <option value="inspeccion">{t('contactPage.services.inspection')}</option>
-                        <option value="otros">{t('contactPage.services.others')}</option>
-                      </select>
-                    </div>
-
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="preferredDate">{t('contactPage.preferredDate')}</Label>
-                      <Input
-                        id="preferredDate"
-                        type="date"
-                        className="border-border focus:border-primary"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="preferredTime">{t('contactPage.preferredTime')}</Label>
-                      <select
-                        id="preferredTime"
-                        className="w-full px-3 py-2 rounded-md border border-border bg-background focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          {t('contactPage.selectTime')}
-                        </option>
-                        <option value="08:00">8:00 AM</option>
-                        <option value="09:00">9:00 AM</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="14:00">2:00 PM</option>
-                        <option value="15:00">3:00 PM</option>
-                        <option value="16:00">4:00 PM</option>
-                        <option value="17:00">5:00 PM</option>
-                      </select>
-
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="service">{t('contact.service')}</Label>
+                    <Select value={formData.service} onValueChange={(value) => handleChange("service", value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('contactForm.servicePlaceholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="inspeccion">{t('contactForm.services.inspection')}</SelectItem>
+                        <SelectItem value="certificacion">{t('contactForm.services.certification')}</SelectItem>
+                        <SelectItem value="consultoria">{t('contactForm.services.consulting')}</SelectItem>
+                        <SelectItem value="capacitacion">{t('contactForm.services.training')}</SelectItem>
+                        <SelectItem value="auditoria">{t('contactForm.services.audit')}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="message">{t('contact.message')}</Label>
                     <Textarea
                       id="message"
-                      placeholder={t('contactPage.messagePlaceholder')}
-                      className="min-h-[120px] border-border focus:border-primary"
+                      value={formData.message}
+                      onChange={(e) => handleChange("message", e.target.value)}
+                      placeholder={t('contactForm.messagePlaceholder')}
+                      rows={4}
+                      required
                     />
                   </div>
 
-                  <Button className="w-full" size="lg">
-                    {t('contactPage.scheduleButton')}
+                  <Button type="submit" className="w-full" size="lg">
+                    {t('contactForm.sendMessage')}
                   </Button>
                 </form>
               </CardContent>

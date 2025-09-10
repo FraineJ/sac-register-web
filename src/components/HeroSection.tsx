@@ -8,21 +8,22 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroYacht})` }}
-      />
+      <img 
+  src={heroYacht} 
+  alt="Hero" 
+  className="absolute inset-0 w-full h-full object-cover object-center md:object-center"
+/>
       
       {/* Overlay */}
-      <div className="absolute inset-0 ocean-gradient opacity-60" />
+      <div className="absolute inset-0 ocean-gradient opacity-10" />
       
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
       
         
-        <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed">
+        {/* <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed">
           {t('hero.subtitle')}
-        </p>
+        </p> */}
         
         {/* <Button 
           size="lg" 
