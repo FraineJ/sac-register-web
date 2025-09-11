@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import logo from "@/assets/logo-sac.png";
+import logo from "@/assets/logo.png";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
