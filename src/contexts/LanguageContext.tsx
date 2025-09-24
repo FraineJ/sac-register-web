@@ -116,6 +116,8 @@ const translations = {
     'contactForm.services.consulting': 'Consultoría Técnica',
     'contactForm.services.training': 'Capacitación',
     'contactForm.services.audit': 'Auditoría de Sistemas',
+    'contactForm.errorTitle' : 'Error al enviar la solicitud',
+    'contactForm.errorDescription' : 'Ha ocurrido un error al enviar el mensaje. Por favor, inténtelo de nuevo.',
 
     // About Us Page
     'aboutUs.heroTitle': 'Quiénes Somos',
@@ -302,6 +304,8 @@ const translations = {
     'contactForm.services.consulting': 'Technical Consulting',
     'contactForm.services.training': 'Training',
     'contactForm.services.audit': 'Systems Audit',
+    'contactForm.errorTitle' : 'Error sending request',
+    'contactForm.errorDescription' : 'An error occurred while sending the message. Please try again.',
 
     // About Us Page
     'aboutUs.heroTitle': 'About Us',

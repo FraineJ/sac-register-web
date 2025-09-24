@@ -9,10 +9,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import callCenter from "@/assets/call-center.png";
+import { emailService } from "@/services/email.services";
 
 const ContactForm = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,20 +25,59 @@ const ContactForm = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: t('contactForm.messageSent'),
-      description: t('contactForm.messageDescription'),
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      service: "",
-      message: ""
-    });
+    setIsLoading(true);
+
+    try {
+      // Preparar los datos para el servicio de email
+      const emailData = {
+        subject: `Nueva solicitud de contacto - ${formData.name}`,
+        template: "contact-form", // Si usas plantillas
+        data: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: formData.service,
+          message: formData.message,
+          date: new Date().toLocaleDateString('es-ES'),
+          time: new Date().toLocaleTimeString('es-ES')
+        }
+      };
+
+      // Enviar el email
+      await emailService.create(emailData);
+
+      // Mostrar mensaje de éxito
+      toast({
+        title: t('contactForm.messageSent'),
+        description: t('contactForm.messageDescription'),
+        variant: "default",
+      });
+
+      // Resetear el formulario
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        service: "",
+        message: ""
+      });
+
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      
+      // Mostrar mensaje de error
+      toast({
+        title: t('contactForm.errorTitle') || "Error",
+        description: t('contactForm.errorDescription') || "Ha ocurrido un error al enviar el mensaje. Por favor, inténtelo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {

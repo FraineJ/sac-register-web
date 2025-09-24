@@ -1,16 +1,19 @@
-import { Phone, Mail, MapPin, Calendar, Clock, User, MessageSquare } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast, useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
-import { toast } from "@/hooks/use-toast";
+import { Mail, Phone, MapPin, Clock, Calendar } from "lucide-react";
+import callCenter from "@/assets/call-center.png";
+import { emailService } from "@/services/email.services";
 
 const Contact = () => {
   const { t } = useLanguage();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -21,20 +24,59 @@ const Contact = () => {
     message: ""
   });
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: t('contactForm.messageSent'),
-      description: t('contactForm.messageDescription'),
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      service: "",
-      message: ""
-    });
+    setIsLoading(true);
+
+    try {
+      // Preparar los datos para el servicio de email
+      const emailData = {
+        subject: `Nueva solicitud de contacto - ${formData.name}`,
+        template: "contact-form", // Si usas plantillas
+        data: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: formData.service,
+          message: formData.message,
+          date: new Date().toLocaleDateString('es-ES'),
+          time: new Date().toLocaleTimeString('es-ES')
+        }
+      };
+
+      // Enviar el email
+      await emailService.create(emailData);
+
+      // Mostrar mensaje de éxito
+      toast({
+        title: t('contactForm.messageSent'),
+        description: t('contactForm.messageDescription'),
+        variant: "default",
+      });
+
+      // Resetear el formulario
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        service: "",
+        message: ""
+      });
+
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      
+      // Mostrar mensaje de error
+      toast({
+        title: t('contactForm.errorTitle') || "Error",
+        description: t('contactForm.errorDescription') || "Ha ocurrido un error al enviar el mensaje. Por favor, inténtelo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -81,6 +123,7 @@ const Contact = () => {
                         onChange={(e) => handleChange("name", e.target.value)}
                         placeholder={t('contactForm.namePlaceholder')}
                         required
+                        disabled={isLoading}
                       />
                     </div>
                     <div className="space-y-2">
@@ -92,6 +135,7 @@ const Contact = () => {
                         onChange={(e) => handleChange("email", e.target.value)}
                         placeholder={t('contactForm.emailPlaceholder')}
                         required
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
@@ -105,6 +149,7 @@ const Contact = () => {
                         onChange={(e) => handleChange("phone", e.target.value)}
                         placeholder={t('contactForm.phonePlaceholder')}
                         required
+                        disabled={isLoading}
                       />
                     </div>
                     <div className="space-y-2">
@@ -114,13 +159,18 @@ const Contact = () => {
                         value={formData.company}
                         onChange={(e) => handleChange("company", e.target.value)}
                         placeholder={t('contactForm.companyPlaceholder')}
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="service">{t('contact.service')}</Label>
-                    <Select value={formData.service} onValueChange={(value) => handleChange("service", value)}>
+                    <Select 
+                      value={formData.service} 
+                      onValueChange={(value) => handleChange("service", value)}
+                      disabled={isLoading}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder={t('contactForm.servicePlaceholder')} />
                       </SelectTrigger>
@@ -143,17 +193,24 @@ const Contact = () => {
                       placeholder={t('contactForm.messagePlaceholder')}
                       rows={4}
                       required
+                      disabled={isLoading}
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" size="lg">
-                    {t('contactForm.sendMessage')}
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    size="lg"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? t('contactForm.sending') || "Enviando..." : t('contactForm.sendMessage')}
                   </Button>
                 </form>
               </CardContent>
             </Card>
 
-            {/* Contact Information */}
+            {/* ... resto del código permanece igual ... */}
+             {/* Contact Information */}
             <div className="space-y-8">
               <Card className="shadow-elegant">
                 <CardHeader>
