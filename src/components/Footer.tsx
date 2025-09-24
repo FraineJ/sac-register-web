@@ -90,7 +90,7 @@ export function Footer() {
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 mt-1" />
-                <span>Carrera 3 No. 46-51, Oficina 905.<br />Cartagena de Indias - Colombia</span>
+                <span>Carrera 3 No. 46-51, Oficina 905 Edificio laguna 46<br />Cartagena de Indias - Colombia</span>
               </div>
             </div>
           </div>
