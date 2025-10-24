@@ -10,12 +10,17 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLanguage();
 
+
   const navigationLinks = [
     { href: "/", label: t('nav.home') },
     { href: "/quienes-somos", label: t('nav.about') },
     { href: "/servicios", label: t('nav.services') },
     { href: "/contacto", label: t('nav.contact') },
   ];
+
+  const openPortal = () => {
+    window.open('https://sac-register-center.vercel.app/', '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 px-4 py-6 lg:px-8">
@@ -90,6 +95,7 @@ export function Header() {
           <Button
             size="sm"
             className="hidden sm:flex border-white/30 text-white bg-"
+            onClick={openPortal}
             variant="outline"
           >
             {t('header.portal')}
